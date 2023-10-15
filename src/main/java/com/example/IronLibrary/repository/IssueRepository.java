@@ -1,10 +1,12 @@
-package com.example.IronLibrary.repo;
+package com.example.IronLibrary.repository;
 
+import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.model.Issue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IIssueRepo extends JpaRepository<Issue, Integer> {
+public interface IssueRepository extends JpaRepository<Issue, Integer> {
+
 
 }

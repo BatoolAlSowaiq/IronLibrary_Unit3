@@ -1,10 +1,9 @@
-package com.example.IronLibrary.repo;
+package com.example.IronLibrary.repository;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
-class IIssueRepoTest {
+class AuthorRepositoryTest {
 
 }
