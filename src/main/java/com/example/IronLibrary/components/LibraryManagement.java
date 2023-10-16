@@ -2,11 +2,15 @@ package com.example.IronLibrary.components;
 
 import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.model.Book;
+import com.example.IronLibrary.model.Student;
+import com.example.IronLibrary.model.Issue;
 import com.example.IronLibrary.repository.AuthorRepository;
 import com.example.IronLibrary.repository.BookRepository;
+import com.example.IronLibrary.repository.StudentRepository;
+import com.example.IronLibrary.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import java.util.List;
 import java.util.Scanner;
 
 @Component
@@ -15,6 +19,10 @@ public class LibraryManagement {
     BookRepository bookRepository;
     @Autowired
     AuthorRepository authorRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    IssueRepository issueRepository;
     Scanner scanner = new Scanner(System.in);
 
     public void displayMenu(){
@@ -97,7 +105,7 @@ public class LibraryManagement {
                     //Call method
                     break;
                 case 7:
-                    //Call method
+                    listBooksByUsn();
                     break;
                 case 8:
                     //Call method
@@ -128,6 +136,24 @@ public class LibraryManagement {
     public void searchBookByTitle( String bookTitle){
 
         bookRepository.findByTitle(bookTitle);
+    }
+
+    public void listBooksByUsn() {
+        System.out.println("Enter usn : ");
+        String usn = scanner.next();
+        // Find the student by USN
+        Student student = studentRepository.findByUsn(usn);
+        // Find the issued books for the student
+        List<Issue> issuedBooks = issueRepository.findByIssueStudent(student);
+        if (issuedBooks == null) {
+            System.out.println("No books issued by student with usn: "+usn);
+        }else{
+        for ( Issue issuedBook : issuedBooks) {
+            System.out.println("Book Title:"+issuedBook.getIssueBook().getTitle()+
+                    "\nStudent Name:"+student.getName()+
+                    "\nReturn date:"+issuedBook.getReturnDate());
+        }
+        }
     }
 
 }
