@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Integer> {
 
-   public Optional<Issue> findByBook (Book book);
-   public Optional<Issue> findByStudentAndBook(Student student, Book book);
+
+   Optional<Issue> findByIssueStudentAndIssueBook(Student student, Book book);
+
+   Optional<Issue> findByIssueBook(Book book);
 }
