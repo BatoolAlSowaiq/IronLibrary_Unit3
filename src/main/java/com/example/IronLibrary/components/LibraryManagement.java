@@ -30,7 +30,6 @@ public class LibraryManagement {
 
 
     public void searchBookByTitle(String bookTitle){
-
         bookRepository.findByTitle(bookTitle);
     }
     public void issueBookToStudent() {
@@ -38,7 +37,7 @@ public class LibraryManagement {
         Scanner scanner = new Scanner(System.in);
 
         // Get student info
-        Student currentStudent = getStudentInfo(scanner);
+        Student currentStudent = getStudent(scanner);
 
         // Get book ISBN
         String isbn = getValidBookISBN(scanner);
@@ -55,7 +54,7 @@ public class LibraryManagement {
 
         scanner.close();
     }
-    public void  getStudentInfo(Scanner scanner) {
+    public void  getStudent(Scanner scanner) {
         //return student
     }
     public void  getSValidName(Scanner scanner) {
