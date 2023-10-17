@@ -1,11 +1,21 @@
 package com.example.IronLibrary.components;
 
+import com.example.IronLibrary.model.Book;
+import com.example.IronLibrary.model.Issue;
+import com.example.IronLibrary.model.Student;
+import com.example.IronLibrary.repository.BookRepository;
+import com.example.IronLibrary.repository.IssueRepository;
+import com.example.IronLibrary.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -13,6 +23,14 @@ class LibraryManagementTest {
 
     @Autowired
     LibraryManagement libraryManagement;
+    @Autowired
+    IssueRepository issueRepository;
+
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    StudentRepository studentRepository;
     @Test
     void getValidName_validName_returnCorrectName() {
 
@@ -172,5 +190,100 @@ class LibraryManagementTest {
         String result = libraryManagement.getValidEmail("Enter your email: ");
         // Assert that the returned email is equal to the expected valid email
         assertEquals("validemail@example.com", result);
+    }
+
+
+    @Test
+    void handleBookIssue_bookAndStudent_bookIssued() {
+        //create book and student
+        Book book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
+        bookRepository.save(book);
+
+        Student student = new Student("09003688800"," John Doe");
+
+        //Issue the book to the student
+        libraryManagement.handleBookIssue(book,student);
+
+        //Check if the book is issued successfully
+        Optional<Issue> issueOptional = issueRepository.findByIssueStudentAndIssueBook(student,book);
+
+        assertTrue(issueOptional.isPresent());
+        System.out.println("The issue: " + issueOptional.get());
+
+        //check if the student is saved in the Student table
+        Optional<Student> studentOptional =  studentRepository.findById("09003688800");
+        assertTrue(studentOptional.isPresent());
+
+        System.out.println("The student : " + studentOptional.get());
+
+        //delete the records
+        issueRepository.deleteById(issueOptional.get().getId());
+        bookRepository.deleteById("978-3-16-148410-0");
+        studentRepository.deleteById("09003688800");
+
+
+    }
+
+    @Test
+    void handleBookIssue_bookAndStudent_bookNotIssued() {
+        //create book
+        Book book = new Book("978-3-16-148410-0","The Notebook","Romance",1);
+        bookRepository.save(book);
+
+        Student student1 = new Student("09003688800"," John Doe");
+        Student student2 = new Student("01001111100","Batool Alsowaiq");
+
+        //Issue the book to the student
+        libraryManagement.handleBookIssue(book,student1);
+        //Issue the book again to another student
+        libraryManagement.handleBookIssue(book,student2);
+
+        //Check if the book is not issued
+        Optional<Issue> issueOptional1 = issueRepository.findByIssueStudentAndIssueBook(student1,book);
+
+        //Check if the book is not issued
+        Optional<Issue> issueOptional2 = issueRepository.findByIssueStudentAndIssueBook(student2,book);
+
+        assertTrue(issueOptional2.isEmpty());
+        System.out.println("No more book to issue!");
+
+        //check if the student2 is not saved in the Student table
+        Optional<Student> studentOptional =  studentRepository.findById("01001111100");
+        assertTrue(studentOptional.isEmpty());
+        System.out.println("Did not saved");
+
+        //delete the records
+        issueRepository.deleteById(issueOptional1.get().getId());
+        bookRepository.deleteById("978-3-16-148410-0");
+        studentRepository.deleteById("09003688800");
+
+
+    }
+
+    @Test
+    public void getIssueDateAndReturnDate_correctStartDateAndReturnDate() {
+
+        // Get the current date
+        Date currentDate = new Date();
+
+        // Create a calendar instance and add 7 days
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
+
+        // Get the expected return date
+        Date expectedReturnDate = calendar.getTime();
+
+        // Format the dates as strings
+        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+        String expectedIssueDateStr = formatter.format(currentDate);
+        String expectedReturnDateStr = formatter.format(expectedReturnDate);
+
+        // Call the method
+        String[] dates = libraryManagement.getIssueDateAndReturnDate();
+
+        // Assert that the Start & Returned dates match the expected dates
+        assertEquals(expectedIssueDateStr, dates[0]);
+        assertEquals(expectedReturnDateStr, dates[1]);
     }
 }

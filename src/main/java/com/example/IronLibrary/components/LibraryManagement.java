@@ -15,11 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
-
-import java.util.Scanner;
+import java.util.*;
 
 @Component
 public class LibraryManagement {
@@ -237,6 +233,7 @@ public class LibraryManagement {
         // Search about the book by its ISBN
         Optional<Book> bookOptional = bookRepository.findById(isbn);
 
+
         if (bookOptional.isPresent()) {
             //If the book is found, handle the issue cases
             handleBookIssue(bookOptional.get(), currentStudent);
@@ -251,13 +248,13 @@ public class LibraryManagement {
         //Search if the book  is issued to current student
         Optional<Issue> currentStudentIssue = issueRepository.findByIssueStudentAndIssueBook(student, book);
 
-        // Search if the book is issued to another student
-        Optional<Issue> anotherStudentIssue = issueRepository.findByIssueBook(book);
+        // Search if there is no more book to issue (book quantity = 0)
+        List<Issue> issueList = issueRepository.findByIssueBook(book);
 
         if (currentStudentIssue.isPresent()) {
             System.out.println("You already issued this book");
-        } else if (anotherStudentIssue.isPresent()) {
-            System.out.println("The book is already issued to another student.");
+        } else if (issueList.size() == book.getQuantity()) {
+            System.out.println("Sorry, there is no more book to issue");
         } else {
 
             //Get the issueDate and returnDate in the proper format.
@@ -305,13 +302,12 @@ public class LibraryManagement {
 
 
     public void searchBookByCategory( String category){
-
         bookRepository.findByCategory(category);
     }
 
 
-    public void searchBookByAuthor( String authorName){
+    public void searchBookByAuthor(String authorName){
 
-        authorRepository.findByName( authorName);
+        authorRepository.findByName(authorName);
     }
 }
