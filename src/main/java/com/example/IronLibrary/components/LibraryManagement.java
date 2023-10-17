@@ -15,11 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
-
-import java.util.Scanner;
+import java.util.*;
 
 @Component
 public class LibraryManagement {
@@ -314,4 +310,25 @@ public class LibraryManagement {
 
         authorRepository.findByName( authorName);
     }
-}
+    public void listAllBooksWithAuthors() {
+        // Fetch all books from the repository
+        List<Book> books = bookRepository.findAll();
+        if (books.isEmpty()) {
+            System.out.println("No books found.");
+        } else {
+            // Loop through each book and print its details along with the author's information
+            for (Book book : books) {
+                Author author = book.getAuthor();
+                if (author != null) {
+                    System.out.println("Book ISBN: " + book.getIsbn());
+                    System.out.println("Book Title: " + book.getTitle());
+                    System.out.println("Book Category: " + book.getCategory());
+                    System.out.println("No of Books: " + book.getQuantity());
+                    System.out.println("Author Name: " + author.getName());
+                    System.out.println("Author Mail: " + author.getEmail());
+                    System.out.println();
+                }
+            }
+        }
+
+    }}
