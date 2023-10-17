@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,4 +51,32 @@ class BookRepositoryTest {
         bookRepository.deleteById("978-3-16-148410-0");
 
     }
+    @Test
+    public void testListAllBooksWithAuthors() {
+        // Create and save an Author
+        Author author = new Author("Nicholas Sparks", "nicholassparks@gmail.com", null);
+        authorRepository.save(author);
+
+        // Create and save a Book with the Author relationship
+        Book book = new Book("978-3-16-148410-0", "The Notebook", "Romance", 4);
+        book.setAuthor(author); // Set the Author for the Book
+        bookRepository.save(book);
+
+        // Call the listAllBooksWithAuthors() method
+        List<Book> books = bookRepository.findAll();
+
+        // Check that the list contains the saved book with author
+        assertEquals(1, books.size());
+
+        // Verify the details of the book and author
+        Book retrievedBook = books.get(0);
+        Author retrievedAuthor = retrievedBook.getAuthor();
+        assertEquals("978-3-16-148410-0", retrievedBook.getIsbn());
+        assertEquals("The Notebook", retrievedBook.getTitle());
+        assertEquals("Romance", retrievedBook.getCategory());
+        assertEquals(4, retrievedBook.getQuantity());
+        assertEquals("Nicholas Sparks", retrievedAuthor.getName());
+        assertEquals("nicholassparks@gmail.com", retrievedAuthor.getEmail());
+    }
+
 }
