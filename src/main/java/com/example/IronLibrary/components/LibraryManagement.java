@@ -1,14 +1,15 @@
 package com.example.IronLibrary.components;
 
 
+import com.example.IronLibrary.model.Author;
+import com.example.IronLibrary.repository.*;
+import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.model.Book;
 import com.example.IronLibrary.model.Issue;
 import com.example.IronLibrary.model.Student;
 import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.repository.AuthorRepository;
-import com.example.IronLibrary.repository.BookRepository;
-import com.example.IronLibrary.repository.IssueRepository;
-import com.example.IronLibrary.repository.StudentRepository;
+import jdk.jfr.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class LibraryManagement {
     StudentRepository studentRepository;
 
     @Autowired
-     IssueRepository issueRepository;
+    IssueRepository issueRepository;
     @Autowired
      AuthorRepository authorRepository;
 
@@ -172,7 +173,9 @@ public class LibraryManagement {
                     searchBookByTitle(bookTitle);
                     break;
                 case 3:
-                    //Call method
+                    System.out.println("Enter category : ");
+                    bookCategory = scanner.next();
+                    searchBookByCategory(bookCategory);
                     break;
                 case 4:
                     //Call method
@@ -300,4 +303,15 @@ public class LibraryManagement {
 
 
 
+
+    public void searchBookByCategory( String category){
+
+        bookRepository.findByCategory(category);
+    }
+
+
+    public void searchBookByAuthor( String authorName){
+
+        authorRepository.findByName( authorName);
+    }
 }

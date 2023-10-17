@@ -15,6 +15,7 @@ public class Author {
     private String name;
     private String email;
     @OneToOne
+    @JoinColumn(name = "Book_id")
     private Book authorBook;
 
     public Author(String name, String email, Book authorBook) {

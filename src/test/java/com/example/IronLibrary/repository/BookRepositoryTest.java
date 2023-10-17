@@ -31,16 +31,23 @@ class BookRepositoryTest {
 
     @Test
     public void findByTitle_bookTitle_correctBook(){
-
-//        book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
-//        bookRepository.save(book);
-
         Optional<Book> bookOptional = bookRepository.findByTitle("The Notebook");
         assertTrue(bookOptional.isPresent());
 
         assertEquals("The Notebook",bookOptional.get().getTitle());
         System.out.println(bookOptional.get());
-//        bookRepository.deleteById("978-3-16-148410-0");
     }
 
+    @Test
+    public void findByCategory_category_correctBook(){
+
+        book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
+        bookRepository.save(book);
+
+        Optional<Book> bookOptional = bookRepository.findByCategory("Romance");
+        assertTrue(bookOptional.isPresent());
+        assertEquals("Romance",bookOptional.get().getCategory());
+        bookRepository.deleteById("978-3-16-148410-0");
+
+    }
 }
