@@ -124,8 +124,7 @@ public class LibraryManagement {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    System.out.println("Enter isbn : ");
-                    isbn = scanner.next();
+                    isbn =  getValidIsbn();
                     System.out.println("Enter title : ");
                     bookTitle = scanner.next();
                     while (!bookTitle.matches("[A-Za-z\\s]+") ) {
@@ -140,20 +139,9 @@ public class LibraryManagement {
                         System.out.println("Enter category :");
                         bookCategory = scanner.next();
                     }
-                    System.out.println("Enter Author name :");
-                    authorName = scanner.next();
-                    while (!authorName.matches("[A-Za-z\\s]+") || authorName.length() <= 3) {
-                        System.out.println("Please enter valid name");
-                        System.out.println("Enter Author name :");
-                        authorName = scanner.next();
-                    }
-                    System.out.println("Enter Author mail :");
-                    authorMail = scanner.next();
-                    while (!authorMail.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")){
-                        System.out.println("Please enter valid mail");
-                        System.out.println("Enter Author mail :");
-                        authorMail = scanner.next();
-                    }
+                    authorName= getValidName("Enter Author name :");
+                    authorMail= getValidEmail("Enter Author mail :");
+
                     System.out.println("Enter number of books :");
                     numbersOfBook = scanner.nextInt();
                     while (numbersOfBook < 0){
@@ -166,27 +154,38 @@ public class LibraryManagement {
                 case 2:
                     System.out.println("Enter title : ");
                     bookTitle = scanner.next();
+                    while (!bookTitle.matches("[A-Za-z\\s]+") ) {
+                        System.out.println("Please enter valid title");
+                        System.out.println("Enter title : ");
+                        bookTitle = scanner.next();
+                    }
                     searchBookByTitle(bookTitle);
                     break;
                 case 3:
-                    System.out.println("Enter category : ");
+                    System.out.println("Enter category :");
                     bookCategory = scanner.next();
+                    while (!bookCategory.matches("[A-Za-z\\s]+")) {
+                        System.out.println("Please enter valid category");
+                        System.out.println("Enter category :");
+                        bookCategory = scanner.next();
+                    }
                     searchBookByCategory(bookCategory);
                     break;
                 case 4:
-                    //Call method
+                    authorName= getValidName("Enter Author name :");
+                    searchBookByAuthor(authorName);
                     break;
                 case 5:
-                    //Call method
+                    listAllBooksWithAuthors();
                     break;
                 case 6:
                     //Call method
                     break;
                 case 7:
-                    //Call method
+                    getValidUsn();
                     break;
                 case 8:
-                    //Call method
+                    System.out.println("thank you for using Iron Library");
                     repeat = false;
                     System.exit(0);
                     break;
@@ -295,10 +294,7 @@ public class LibraryManagement {
             dates[1] = returnDateStr;
             return dates;
     }
-
-
-
-
+    
 
     public void searchBookByCategory( String category){
 
@@ -310,25 +306,19 @@ public class LibraryManagement {
 
         authorRepository.findByName( authorName);
     }
+
     public void listAllBooksWithAuthors() {
         // Fetch all books from the repository
-        List<Book> books = bookRepository.findAll();
-        if (books.isEmpty()) {
+        List<Author> authors = authorRepository.findAll();
+        if (authors.isEmpty()) {
             System.out.println("No books found.");
         } else {
+        System.out.println("ISBN        Title       Category        num. of books      author name      email:\n"   );
             // Loop through each book and print its details along with the author's information
-            for (Book book : books) {
-                Author author = book.getAuthor();
-                if (author != null) {
-                    System.out.println("Book ISBN: " + book.getIsbn());
-                    System.out.println("Book Title: " + book.getTitle());
-                    System.out.println("Book Category: " + book.getCategory());
-                    System.out.println("No of Books: " + book.getQuantity());
-                    System.out.println("Author Name: " + author.getName());
-                    System.out.println("Author Mail: " + author.getEmail());
-                    System.out.println();
+            for (Author author : authors) {
+                    System.out.println(author);
                 }
             }
         }
 
-    }}
+    }

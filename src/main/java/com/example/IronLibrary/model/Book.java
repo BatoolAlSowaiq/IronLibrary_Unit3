@@ -1,7 +1,6 @@
 package com.example.IronLibrary.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -20,4 +19,8 @@ public class Book {
     private String category;
     private Integer quantity;
 
+    @Override
+    public String toString() {
+        return isbn+"         "+title + "       " +category +"         "+quantity;
+    }
 }

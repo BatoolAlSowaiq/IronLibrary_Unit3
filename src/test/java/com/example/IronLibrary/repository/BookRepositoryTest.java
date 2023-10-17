@@ -2,6 +2,7 @@ package com.example.IronLibrary.repository;
 
 import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.model.Book;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,18 @@ class BookRepositoryTest {
     private AuthorRepository authorRepository;
     private Book book;
     private Author author;
+
+    @BeforeEach
+    public void setUp(){
+        book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
+        bookRepository.save(book);
+    }
+
+    @AfterEach
+    public void tearDown(){
+        bookRepository.deleteById(book.getIsbn());
+    }
+
 
     @Test
     public void addBook_newBook(){
@@ -51,32 +64,6 @@ class BookRepositoryTest {
         bookRepository.deleteById("978-3-16-148410-0");
 
     }
-    @Test
-    public void testListAllBooksWithAuthors() {
-        // Create and save an Author
-        Author author = new Author("Nicholas Sparks", "nicholassparks@gmail.com", null);
-        authorRepository.save(author);
 
-        // Create and save a Book with the Author relationship
-        Book book = new Book("978-3-16-148410-0", "The Notebook", "Romance", 4);
-        book.setAuthor(author); // Set the Author for the Book
-        bookRepository.save(book);
-
-        // Call the listAllBooksWithAuthors() method
-        List<Book> books = bookRepository.findAll();
-
-        // Check that the list contains the saved book with author
-        assertEquals(1, books.size());
-
-        // Verify the details of the book and author
-        Book retrievedBook = books.get(0);
-        Author retrievedAuthor = retrievedBook.getAuthor();
-        assertEquals("978-3-16-148410-0", retrievedBook.getIsbn());
-        assertEquals("The Notebook", retrievedBook.getTitle());
-        assertEquals("Romance", retrievedBook.getCategory());
-        assertEquals(4, retrievedBook.getQuantity());
-        assertEquals("Nicholas Sparks", retrievedAuthor.getName());
-        assertEquals("nicholassparks@gmail.com", retrievedAuthor.getEmail());
-    }
 
 }

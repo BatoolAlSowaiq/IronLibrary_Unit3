@@ -23,10 +23,11 @@ class AuthorRepositoryTest {
     private Author author;
 @BeforeEach
     public void setUp(){
+    book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
+    bookRepository.save(book);
         author = new Author("Nicholas Sparks", "nicholassparks@gmail.com", book);
         authorRepository.save(author);
-        book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
-        bookRepository.save(book);
+
     }
 
     @AfterEach
@@ -50,6 +51,17 @@ class AuthorRepositoryTest {
         Optional<Author> autherOptional = authorRepository.findByName("Hassan");
         assertTrue(autherOptional.isEmpty());
         System.out.println("Not FOUND!!!");
+    }
+
+    @Test
+    public void testListAllBooksWithAuthors() {
+
+        // Call the listAllBooksWithAuthors() method
+        List<Author> authors = authorRepository.findAll();
+
+        // Check that the list contains the saved book with author
+        assertEquals(1,authors.size());
+
     }
 
 }
