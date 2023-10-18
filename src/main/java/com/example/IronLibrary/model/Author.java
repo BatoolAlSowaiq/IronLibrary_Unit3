@@ -15,6 +15,7 @@ public class Author {
     private String name;
     private String email;
     @OneToOne
+    @JoinColumn(name = "book_id")
     private Book authorBook;
 
     public Author(String name, String email, Book authorBook) {
@@ -23,4 +24,8 @@ public class Author {
         this.authorBook = authorBook;
     }
 
+    @Override
+    public String toString() {
+        return   authorBook+ "       "+ name + "        " + email;
+    }
 }

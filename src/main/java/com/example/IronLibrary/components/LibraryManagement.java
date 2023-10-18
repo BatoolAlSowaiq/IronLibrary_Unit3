@@ -1,5 +1,6 @@
 package com.example.IronLibrary.components;
 
+
 import com.example.IronLibrary.model.Author;
 import com.example.IronLibrary.model.Book;
 import com.example.IronLibrary.model.Student;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Scanner;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 @Component
 public class LibraryManagement {
     @Autowired
@@ -24,14 +28,85 @@ public class LibraryManagement {
     @Autowired
     IssueRepository issueRepository;
     Scanner scanner = new Scanner(System.in);
+    public String getValidName(String promptToAskUser){
 
+        Scanner scanner = new Scanner(System.in);
+        String name;
+        while (true){
+            //take user input
+            System.out.print(promptToAskUser);
+            name = scanner.nextLine();
+
+            //if user input is empty or too short
+            if( name.length() >= 3 ) break;
+            else {System.out.println("Invalid Input! Name must be at least 3 character");}
+
+        }return name;
+    }
+    public String getValidUsn() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Please enter the USN: ");
+            String usn = scanner.nextLine();
+
+            // Validate USN format
+            if (usn.matches("\\d{11}")) {
+                return usn;
+            } else {
+                System.out.println("Invalid USN. Please try again.");
+            }
+        }
+    }
+    public String getValidIsbn() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Enter the book ISBN: ");
+            String isbn = scanner.nextLine();
+
+            // Remove hyphens and spaces from the entered ISBN
+            String sanitizedISBN = isbn.replaceAll("[\\s-]", "");
+
+            // Validate ISBN format
+            if (sanitizedISBN.matches("\\d{13}")) {
+                // Format the ISBN as 978-3-16-148410-0
+                StringBuilder formattedISBN = new StringBuilder(sanitizedISBN);
+                formattedISBN.insert(3, "-");
+                formattedISBN.insert(5, "-");
+                formattedISBN.insert(8, "-");
+                formattedISBN.insert(15, "-");
+                return formattedISBN.toString();
+            } else {
+                System.out.println("Invalid ISBN");
+            }
+        }
+    }
+    public String getValidEmail(String promptToAskUser){
+        Scanner scanner = new Scanner(System.in);
+        String inputEmail;
+        while (true) {
+
+            //get email from user
+            System.out.print(promptToAskUser);
+            inputEmail = scanner.nextLine().trim();
+
+            if (inputEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) break;
+            else {System.out.println("Invalid email address. Please enter a valid email.");}
+
+
+        }
+        return inputEmail;
+    }
     public void displayMenu(){
+        Scanner scanner = new Scanner(System.in);
         boolean repeat = true;
         String isbn;
         String bookTitle;
         String bookCategory;
         String authorName;
         String authorMail;
+        String usn;
         int numbersOfBook;
         while(repeat){
             System.out.println( """
@@ -48,8 +123,7 @@ public class LibraryManagement {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    System.out.println("Enter isbn : ");
-                    isbn = scanner.next();
+                    isbn =  getValidIsbn();
                     System.out.println("Enter title : ");
                     bookTitle = scanner.next();
                     while (!bookTitle.matches("[A-Za-z\\s]+") ) {
@@ -64,20 +138,9 @@ public class LibraryManagement {
                         System.out.println("Enter category :");
                         bookCategory = scanner.next();
                     }
-                    System.out.println("Enter Author name :");
-                    authorName = scanner.next();
-                    while (!authorName.matches("[A-Za-z\\s]+") || authorName.length() <= 3) {
-                        System.out.println("Please enter valid name");
-                        System.out.println("Enter Author name :");
-                        authorName = scanner.next();
-                    }
-                    System.out.println("Enter Author mail :");
-                    authorMail = scanner.next();
-                    while (!authorMail.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")){
-                        System.out.println("Please enter valid mail");
-                        System.out.println("Enter Author mail :");
-                        authorMail = scanner.next();
-                    }
+                    authorName= getValidName("Enter Author name :");
+                    authorMail= getValidEmail("Enter Author mail :");
+
                     System.out.println("Enter number of books :");
                     numbersOfBook = scanner.nextInt();
                     while (numbersOfBook < 0){
@@ -90,25 +153,39 @@ public class LibraryManagement {
                 case 2:
                     System.out.println("Enter title : ");
                     bookTitle = scanner.next();
+                    while (!bookTitle.matches("[A-Za-z\\s]+") ) {
+                        System.out.println("Please enter valid title");
+                        System.out.println("Enter title : ");
+                        bookTitle = scanner.next();
+                    }
                     searchBookByTitle(bookTitle);
                     break;
                 case 3:
-                    //Call method
+                    System.out.println("Enter category :");
+                    bookCategory = scanner.next();
+                    while (!bookCategory.matches("[A-Za-z\\s]+")) {
+                        System.out.println("Please enter valid category");
+                        System.out.println("Enter category :");
+                        bookCategory = scanner.next();
+                    }
+                    searchBookByCategory(bookCategory);
                     break;
                 case 4:
-                    //Call method
+                    authorName= getValidName("Enter Author name :");
+                    searchBookByAuthor(authorName);
                     break;
                 case 5:
-                    //Call method
+                    listAllBooksWithAuthors();
                     break;
                 case 6:
                     //Call method
                     break;
                 case 7:
-                    listBooksByUsn();
+                    usn = getValidUsn();
+                    listBooksByUsn(usn);
                     break;
                 case 8:
-                    //Call method
+                    System.out.println("thank you for using Iron Library");
                     repeat = false;
                     System.exit(0);
                     break;
@@ -133,27 +210,124 @@ public class LibraryManagement {
 
     }
 
-    public void searchBookByTitle( String bookTitle){
 
+    public void searchBookByTitle(String bookTitle){
         bookRepository.findByTitle(bookTitle);
     }
+    public Student getStudent() {
+        String usn = getValidUsn();
+        String name = getValidName("Enter student name : ");
 
-    public void listBooksByUsn() {
-        System.out.println("Enter usn : ");
-        String usn = scanner.next();
-        // Find the student by USN
+        return new Student(usn,name);
+    }
+    public void issueBookToStudent() {
+
+        // Get student info
+        Student currentStudent = getStudent();
+
+        // Get book ISBN
+        String isbn = getValidIsbn();
+
+        // Search about the book by its ISBN
+        Optional<Book> bookOptional = bookRepository.findById(isbn);
+
+
+        if (bookOptional.isPresent()) {
+            //If the book is found, handle the issue cases
+            handleBookIssue(bookOptional.get(), currentStudent);
+        } else {
+            System.out.println("Sorry, the book is not found!");
+        }
+
+    }
+    public void listBooksByUsn(String usn) {
         Student student = studentRepository.findByUsn(usn);
         // Find the issued books for the student
         List<Issue> issuedBooks = issueRepository.findByIssueStudent(student);
         if (issuedBooks == null) {
             System.out.println("No books issued by student with usn: "+usn);
         }else{
-        for ( Issue issuedBook : issuedBooks) {
-            System.out.println("Book Title:"+issuedBook.getIssueBook().getTitle()+
-                    "\nStudent Name:"+student.getName()+
-                    "\nReturn date:"+issuedBook.getReturnDate());
-        }
+            for ( Issue issuedBook : issuedBooks) {
+                System.out.println("Book Title:"+issuedBook.getIssueBook().getTitle()+
+                        "\nStudent Name:"+student.getName()+
+                        "\nReturn date:"+issuedBook.getReturnDate());
+            }
         }
     }
 
-}
+    public void handleBookIssue(Book book, Student student) {
+
+        //Search if the book  is issued to current student
+        Optional<Issue> currentStudentIssue = issueRepository.findByIssueStudentAndIssueBook(student, book);
+
+        // Search if there is no more book to issue (book quantity = 0)
+        List<Issue> issueList = issueRepository.findByIssueBook(book);
+
+        if (currentStudentIssue.isPresent()) {
+            System.out.println("You already issued this book");
+        } else if (issueList.size() == book.getQuantity()) {
+            System.out.println("Sorry, there is no more book to issue");
+        } else {
+
+            //Get the issueDate and returnDate in the proper format.
+            String[] date = getIssueDateAndReturnDate();
+
+            //Issue the book to the student
+            Issue issue = new Issue(date[0], date[1], student, book);
+            System.out.println("Book issued. Return date: " + date[1]);
+
+            //Save the student in the student table ????????????????????
+            studentRepository.save(student);
+            //Save the issue in its table
+            issueRepository.save(issue);
+        }
+
+    }
+
+    public String[] getIssueDateAndReturnDate(){
+
+            // Get the current date
+            Date currentDate = new Date();
+
+            // Create a calendar instance and add 7 days
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+
+            // Get the return date
+            Date returnDate = calendar.getTime();
+
+            // Format the dates as strings
+            SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+            String issueDateStr = formatter.format(currentDate);
+            String returnDateStr = formatter.format(returnDate);
+
+            // Create and return an array of dates
+            String[] dates = new String[2];
+            dates[0] = issueDateStr;
+            dates[1] = returnDateStr;
+            return dates;
+    }
+
+    public void searchBookByCategory( String category){
+        bookRepository.findByCategory(category);
+    }
+
+    public void searchBookByAuthor(String authorName){
+        authorRepository.findByName(authorName);
+    }
+
+    public void listAllBooksWithAuthors() {
+        // Fetch all books from the repository
+        List<Author> authors = authorRepository.findAll();
+        if (authors.isEmpty()) {
+            System.out.println("No books found.");
+        } else {
+        System.out.println("ISBN        Title       Category        num. of books      author name      email:\n"   );
+            // Loop through each book and print its details along with the author's information
+            for (Author author : authors) {
+                    System.out.println(author);
+                }
+            }
+        }
+    }
