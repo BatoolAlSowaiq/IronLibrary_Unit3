@@ -4,7 +4,9 @@
 This program is designed to manage a library system. It provides various features such as adding books, searching for books by title, category, or author, listing all books with their authors, issuing books to students, and listing books by student identification (USN). This Read Me file will guide you through the basic functionalities of the application.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- How the Application Works -->
+
 ## How the Application Works
 Upon starting the application, a menu with the following options will be displayed to the user:
 
@@ -18,13 +20,17 @@ Upon starting the application, a menu with the following options will be display
 8. **Exit**: Closes the application.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- Usage -->
+
 ## Usage
 - To select an option, type the corresponding number and press Enter.
 - Follow the on-screen prompts and instructions for each selected option.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- Sample Usage -->
+
 ## Sample Usage
 Here's an example of how you can use the program:
 1. Start the program.
@@ -33,16 +39,20 @@ Here's an example of how you can use the program:
 4. After the action is executed, the menu will automatically re-display, allowing you to perform more actions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- Terminating the Program -->
+
 ## Terminating the Program
 To exit the program, select option 8.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- Team members -->
+
 ## Team members
 - [Hadeel](https://github.com/HadeelNaif)
 - [Amal](https://github.com/AmalHassanAlmaabady)
-- [Batool](https://github.com/BatoolAlSowaiq))
+- [Batool](https://github.com/BatoolAlSowaiq)
 - [Raghad](https://github.com/RaghadIbrahem)
 - [Bashair](https://github.com/Bnq11)
 
