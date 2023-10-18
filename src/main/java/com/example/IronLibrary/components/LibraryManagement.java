@@ -254,6 +254,7 @@ public class LibraryManagement {
         // Get student info
         Student currentStudent = getStudent();
 
+        studentRepository.save(currentStudent);
         // Get book ISBN
         String isbn = getValidIsbn();
 
@@ -297,9 +298,7 @@ public class LibraryManagement {
             Issue issue = new Issue(date[0], date[1], student, book);
             System.out.println("Book issued. Return date: " + date[1]);
 
-            //Save the student in the student table
-            studentRepository.save(student);
-            //Save the issue in its table
+             //Save the issue in its table
             issueRepository.save(issue);
         }
 
