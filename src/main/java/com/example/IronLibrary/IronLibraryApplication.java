@@ -17,6 +17,6 @@ public class IronLibraryApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		libraryManagement.displayMenu();
 	}
 }

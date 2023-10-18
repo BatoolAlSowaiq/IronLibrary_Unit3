@@ -17,7 +17,7 @@ public class Issue {
     @JoinColumn(name = "student_id")
     private Student issueStudent;
     @OneToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "isbn")
     private Book issueBook;
 
     public Issue(String issueDate, String returnDate, Student issueStudent, Book issueBook) {

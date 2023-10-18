@@ -196,7 +196,7 @@ class LibraryManagementTest {
     @Test
     void handleBookIssue_bookAndStudent_bookIssued() {
         //create book and student
-        Book book = new Book("978-3-16-148410-0","The Notebook","Romance",4);
+        Book book = new Book("978-3-16-148410-1","The Notebook","Romance",1);
         bookRepository.save(book);
 
         Student student = new Student("09003688800"," John Doe");
@@ -218,7 +218,7 @@ class LibraryManagementTest {
 
         //delete the records
         issueRepository.deleteById(issueOptional.get().getId());
-        bookRepository.deleteById("978-3-16-148410-0");
+        bookRepository.deleteById("978-3-16-148410-1");
         studentRepository.deleteById("09003688800");
 
 
