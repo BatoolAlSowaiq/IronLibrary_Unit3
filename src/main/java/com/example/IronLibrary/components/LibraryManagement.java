@@ -45,7 +45,7 @@ public class LibraryManagement {
             }
 
         }
-        return name;
+        return name.trim().toLowerCase();
     }
 
     public String getValidUsn() {
@@ -253,8 +253,8 @@ public class LibraryManagement {
 
         // Get student info
         Student currentStudent = getStudent();
-
         studentRepository.save(currentStudent);
+
         // Get book ISBN
         String isbn = getValidIsbn();
 
